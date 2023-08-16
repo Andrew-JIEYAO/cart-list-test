@@ -106,6 +106,15 @@
 .item-title {
   margin-bottom: 10px;
   /* 標題與 Grid 之間的間距 */
+  color: var(--surface-on-surface, #1C1D1C);
+  /* Label/Small */
+  font-family: Noto Sans TC;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  letter-spacing: 0.14px;
 }
 
 .item-grid {
@@ -113,6 +122,8 @@
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
   /* 每個 button 之間的間距 */
+  border-bottom: 1px solid var(--outline-variant, #B5BFBB);
+  margin-bottom: 10px;
 }
 
 .item-grid button {
@@ -131,6 +142,15 @@
   align-self: stretch;
   border-radius: var(--border-radius-button, 6px) var(--border-radius-button, 6px) var(--border-radius-none, 0px) var(--border-radius-none, 0px);
   background: var(--primary-container, #CCE7E0);
+  color: var(--primary-on-container, #001B14);
+  /* Headline/H5 */
+  font-family: Noto Sans TC;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  /* 140% */
+  letter-spacing: 0.4px;
 }
 
 .cart-head {
