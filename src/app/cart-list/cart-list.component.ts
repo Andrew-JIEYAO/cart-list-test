@@ -17,21 +17,20 @@ export class CartListComponent implements OnInit {
   @Input() codings: Coding[] = [];
   @Output() codingsChange = new EventEmitter<Coding[]>();
   @Output() hide = new EventEmitter<void>;
-  group: Group = {} as Group;
+  currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
   selectedCodings: Coding[] = [];
-  cart:any[] = [];
-
+  cart: any[] = [];
 
   ngOnInit(): void {
     this.#cleanCheck();
-    this.group = this.value[0]
+    this.currentGroup = this.value[0]
   }
 
   onGroupClick(group: Group) {
     this.subGroups = [];
     this.#cleanCheck();
-    this.group = group;
+    this.currentGroup = group;
   }
 
   onSubGroupChange(subGroup: SubGroup) {
@@ -62,8 +61,6 @@ export class CartListComponent implements OnInit {
     this.hide.emit();
   }
 
-
-
   #cleanCheck(): void {
     this.value.forEach(group => {
       if (group.subGroups) {
@@ -84,7 +81,7 @@ export class CartListComponent implements OnInit {
   }
 
   #addCoding(coding: Coding, subGroup?: SubGroup) {
-    const groupName = this.group.groupName;
+    const groupName = this.currentGroup.groupName;
     const subGroupName = subGroup ? `>${subGroup.subGroupName}` : "";
     const newCoding = coding;
     this.selectedCodings.push({

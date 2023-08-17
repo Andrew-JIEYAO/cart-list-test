@@ -1,6 +1,6 @@
 <div class="card flex justify-content-center">
   <p-button icon="pi pi-external-link" label="菜單" (click)="showDialog()"></p-button>
-  <p-dialog header="菜單項目" [(visible)]="visible" [style]="{width: '95vw', height: '80%'}">
+  <p-dialog header="菜單項目" [(visible)]="visible" [style]="{width: '95vw', height: '90vh'}">
     <his-cart-list [value]="cartValue" [(codings)]="items" (hide)="hideDialog()"></his-cart-list>
   </p-dialog>
 </div>
@@ -12,3 +12,4 @@
     </li>
   </ul>
 </div>
+<!-- <his-cart-list2 [value]="cartValue" [(codings)]="items"></his-cart-list2> -->

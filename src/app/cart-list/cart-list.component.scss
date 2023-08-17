@@ -1,43 +1,70 @@
-.menu-container {
-  margin-top: 20px;
-  display: flex;
-  max-height: 83%;
+/* 重設一些默認的邊距/填充以獲得更好的佈局 */
+.outer-container>* {
+  margin: 0;
+  padding: 0;
 }
 
-.aside {
+.outer-container {
+  height: 100%;
+}
+
+.main-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  height: calc(100% - 55px);
+}
+
+.menu {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.search {
+  padding: 10px 10px 0 10px;
+  box-sizing: border-box;
+  height: 52px;
+}
+
+.search-input-container {
+  display: flex;
+  /* 使用彈性盒子創建橫向佈局 */
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 5px;
+  height: 42px;
+}
+
+.search-button {
+  width: 65px;
+  /* 按鈕寬度為65px */
+  // background-color: lightblue;
+  /* 只是用於視覺效果 */
+  border: none;
+  cursor: pointer;
+}
+
+.menu-content {
+  display: flex;
+  height: calc(100% - 52px);
+}
+
+.group,
+.subGroup {
   flex: 0 0 15%;
   padding: 10px;
   box-sizing: border-box;
+  overflow: auto;
   border-right: 1px solid var(--outline-variant, #B5BFBB);
-  margin-right: 5px;
-}
-
-.item-container {
-  flex: 2;
-  max-width: var(--max-width);
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.item-container::after {
-  background-color: #FFFF;
-}
-
-.cart-container {
-  flex: 1;
-  // background-color: lightgreen;
-  padding-left: 10px;
-  border-left: 1px solid var(--outline-variant, #B5BFBB);
-  margin-left: 10px;
-  box-sizing: border-box;
-  max-width: 15%;
-}
-
-.aside,
-.item-container,
-.cart-container {
-  overflow-y: auto;
-  /* 產生垂直滾動條 */
+  margin: 5px 5px 0 0;
 }
 
 .group-list {
@@ -51,28 +78,21 @@
   padding: 5px 0;
   cursor: pointer;
   display: flex;
-  /* 使用 Flex 布局，使文字和 icon 排在一行 */
   justify-content: space-between;
-  /* 將文字和 icon 分開排列 */
   align-items: center;
-  /* 垂直居中對齊 */
   font-family: 'Noto Sans TC', sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
-  /* 125% */
   letter-spacing: 0.16px;
 }
 
 .group-list li::after {
   content: " >";
   margin-left: 5px;
-  /* 添加左側間距 */
   opacity: 0;
-  /* 隱藏 icon */
   transition: opacity 0.2s ease-in-out;
-  /* 添加過渡效果 */
 }
 
 .group-list li:hover {
@@ -82,7 +102,6 @@
 
 .group-list li:hover::after {
   opacity: 1;
-  /* 顯示 icon */
 }
 
 .subGroup-list div {
@@ -98,17 +117,21 @@
   letter-spacing: 0.16px;
 }
 
+.item {
+  flex-grow: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
 .item-title {
   margin-bottom: 10px;
-  /* 標題與 Grid 之間的間距 */
   color: var(--surface-on-surface, #1C1D1C);
-  /* Label/Small */
-  font-family: Noto Sans TC;
+  font-family: 'Noto Sans TC';
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
-  /* 142.857% */
   letter-spacing: 0.14px;
 }
 
@@ -116,7 +139,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
-  /* 每個 button 之間的間距 */
   border-bottom: 1px solid var(--outline-variant, #B5BFBB);
   margin-bottom: 15px;
 }
@@ -127,6 +149,25 @@
   border: none;
   cursor: pointer;
   text-align: left;
+  overflow: hidden;
+  color: var(--surface-on-surface, #1C1D1C);
+  text-overflow: ellipsis;
+  font-family: 'Noto Sans TC';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+}
+
+.cart {
+  flex-shrink: 0;
+  flex-basis: 20%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow: auto;
+  border-left: 1px solid var(--outline-variant, #B5BFBB);
+  margin-top: 10px;
 }
 
 .cart-title {
@@ -138,25 +179,21 @@
   border-radius: var(--border-radius-button, 6px) var(--border-radius-button, 6px) var(--border-radius-none, 0px) var(--border-radius-none, 0px);
   background: var(--primary-container, #CCE7E0);
   color: var(--primary-on-container, #001B14);
-  /* Headline/H5 */
-  font-family: Noto Sans TC;
+  font-family: 'Noto Sans TC';
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: 28px;
-  /* 140% */
   letter-spacing: 0.4px;
 }
 
 .cart-head {
   color: var(--surface-on-surface, #1C1D1C);
-  /* Label/Small */
   font-family: 'Noto Sans TC';
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
-  /* 142.857% */
   letter-spacing: 0.14px;
 }
 
@@ -167,7 +204,6 @@
 
 .cart-list li {
   display: flex;
-  // min-width: 240px;
   padding: var(--spacing-xs, 4px);
   align-items: center;
   gap: var(--spacing-xs, 4px);
@@ -175,50 +211,56 @@
   overflow: hidden;
   color: var(--surface-on-surface, #1C1D1C);
   text-overflow: ellipsis;
-  /* Body/Medium */
   font-family: 'Noto Sans TC';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
-  /* 125% */
   letter-spacing: 0.16px;
   cursor: pointer;
 }
 
-.okButton {
-  padding: 10px;
+.button-container {
   display: flex;
   justify-content: flex-end;
-  /* 搜尋框靠右對齊 */
-  gap: 10px;
-
-  button {
-    // display: flex;
-    height: 40px;
-    padding: var(--spacing-xs, 4px) var(--spacing-md, 12px);
-    align-items: center;
-    // gap: var(--spacing-xs, 4px);
-    border-radius: var(--border-radius-button, 6px);
-    background: var(--primary-main, #006D50);
-    color: #FFFF;
-  }
+  margin-top: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-top: 1px solid var(--outline-variant, #B5BFBB);
 }
 
+.ok-button {
+  // padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  padding: var(--spacing-xs, 4px) var(--spacing-md, 12px);
+  align-items: center;
+  border-radius: var(--border-radius-button, 6px);
+  background: var(--primary-main, #006D50);
+  color: #FFFF;
+}
 
-/* 媒體查詢，調整在螢幕小於 768px 時的設計 */
-@media screen and (max-width: 768px) {
-  .aside {
-    flex-basis: 50%;
-    /* 調整第一跟第二個 div 的寬度為 50% */
+.selected {
+  background-color: #FDD3A4;
+  border-radius: 5px;
+}
+
+.normal {
+  background-color: transparent;
+}
+
+/* 響應式設計的媒體查詢 */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    /* 在較小的螢幕上切換為垂直佈局 */
   }
 
-  .item-container {
-    max-width: 100%;
-    /* 調整第三個 div 的最大寬度為 100% */
-  }
-
-  .button-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .cart {
+    flex-basis: auto;
+    /* 允許右側Div在較小的螢幕上佔滿整個寬度 */
+    margin-top: 20px;
+    /* 在Div之間添加一些間距 */
   }
 }
