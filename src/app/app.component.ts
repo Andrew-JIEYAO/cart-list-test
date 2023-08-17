@@ -180,76 +180,44 @@ export class AppComponent {
   }
 
   #getData(query: string) {
-    if (query === '1') {
-      this.cartValue = [
-        {
-          "groupName": "披薩",
-          "subGroups": [
-            {
-              "subGroupName": "個人披薩",
-              "showItems": false,
-              "items": [
-                {
-                  "code": "110",
-                  "display": "鐵板雙牛個人披薩"
-                },
-                {
-                  "code": "111",
-                  "display": "哈辣墨西哥個人披薩"
-                },
-                {
-                  "code": "112",
-                  "display": "夏威夷個人披薩"
-                },
-                {
-                  "code": "113",
-                  "display": "韓式泡菜燒肉個人披薩"
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    } else if (query === '2') {
-      this.cartValue = [
-        {
-          "groupName": "漢堡",
-          "subGroups": [
-            {
-              "subGroupName": "米漢堡",
-              "showItems": false,
-              "items": [
-                {
-                  "code": "123",
-                  "display": "和風板烤雞腿米漢堡"
-                },
-                {
-                  "code": "124",
-                  "display": "義式雞腿米漢堡"
-                },
-                {
-                  "code": "125",
-                  "display": "美式厚牛米漢堡"
-                }
-              ]
-            },
-            {
-              "subGroupName": "麵包漢堡",
-              "showItems": false,
-              "items": [
-                {
-                  "code": "126",
-                  "display": "勁辣雞腿堡"
-                },
-                {
-                  "code": "127",
-                  "display": "大麥克堡"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
+    this.cartValue = [
+      {
+        "groupName": "漢堡",
+        "subGroups": [
+          {
+            "subGroupName": "米漢堡",
+            "showItems": false,
+            "items": [
+              {
+                "code": "123",
+                "display": "和風板烤雞腿米漢堡"
+              },
+              {
+                "code": "124",
+                "display": "義式雞腿米漢堡"
+              },
+              {
+                "code": "125",
+                "display": "美式厚牛米漢堡"
+              }
+            ]
+          },
+          {
+            "subGroupName": "麵包漢堡",
+            "showItems": false,
+            "items": [
+              {
+                "code": "126",
+                "display": "勁辣雞腿堡"
+              },
+              {
+                "code": "127",
+                "display": "大麥克堡"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }
