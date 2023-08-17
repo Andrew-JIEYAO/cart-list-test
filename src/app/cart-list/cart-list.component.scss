@@ -1,25 +1,20 @@
 .menu-container {
   margin-top: 20px;
   display: flex;
-  // justify-content: space-between;
-  // flex-wrap: wrap;
-  max-height: 100%;
+  max-height: 83%;
 }
 
 .aside {
   flex: 0 0 15%;
-  // background-color: lightgray;
   padding: 10px;
   box-sizing: border-box;
   border-right: 1px solid var(--outline-variant, #B5BFBB);
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .item-container {
   flex: 2;
   max-width: var(--max-width);
-  /* 使用 CSS 變數來設定最大寬度 */
-  background-color: #F6F6F6;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -123,12 +118,12 @@
   grid-gap: 10px;
   /* 每個 button 之間的間距 */
   border-bottom: 1px solid var(--outline-variant, #B5BFBB);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .item-grid button {
   padding: 10px;
-  // background-color: lightgray;
+  background-color: transparent;
   border: none;
   cursor: pointer;
   text-align: left;

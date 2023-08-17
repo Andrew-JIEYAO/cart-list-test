@@ -1,5 +1,6 @@
 ::ng-deep .p-dialog .p-dialog-header {
   background: #006D50;
+  height: 32px;
 }
 
 ::ng-deep .p-icon {
@@ -8,4 +9,8 @@
 
 ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
   color: white;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 10px 10px 10px;
 }
