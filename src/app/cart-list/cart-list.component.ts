@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Coding, Group, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
@@ -17,13 +17,18 @@ export class CartListComponent implements OnInit {
   @Input() codings: Coding[] = [];
   @Output() codingsChange = new EventEmitter<Coding[]>();
   @Output() hide = new EventEmitter<void>;
+  @Output() search = new EventEmitter<string>;
+  initValue: Group[] = [];
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
   selectedCodings: Coding[] = [];
   cart: any[] = [];
+  query: string = '';
+  isSearch: boolean = false;
 
   ngOnInit(): void {
     this.#cleanCheck();
+    this.initValue = this.value;
     this.currentGroup = this.value[0]
   }
 
@@ -61,6 +66,24 @@ export class CartListComponent implements OnInit {
     this.hide.emit();
   }
 
+  async onSearch() {
+    if (this.query !== '') {
+      await this.search.emit(this.query);
+      this.isSearch = this.isSearch || !this.isSearch;
+    }
+  }
+
+  onCancel() {
+    this.isSearch = this.isSearch && !this.isSearch;
+    this.value = this.initValue;
+  }
+
+  onQueryClick(coding: Coding, groupName: string, subGroupName?: string) {
+    const isExist = this.#checkCodingExist(coding.code);
+    if (!isExist) this.#addQueryCoding(coding, groupName, subGroupName);
+    this.#setCart();
+  }
+
   #cleanCheck(): void {
     this.value.forEach(group => {
       if (group.subGroups) {
@@ -91,10 +114,18 @@ export class CartListComponent implements OnInit {
     });
   }
 
+  #addQueryCoding(coding: Coding, groupName: string, subGroupName?: string) {
+    const stair = subGroupName ? `${groupName}>${subGroupName}` : groupName;
+    const newCoding = coding;
+    this.selectedCodings.push({
+      code: newCoding.code,
+      display: newCoding.display,
+      version: stair
+    });
+  }
+
   #setCart(): void {
     const tmp = this.selectedCodings.groupBy((a) => a.version);
     this.cart = Object.entries(tmp);
   }
 }
-
-

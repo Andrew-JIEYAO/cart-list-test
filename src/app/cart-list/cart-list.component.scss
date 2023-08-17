@@ -57,6 +57,11 @@
   height: calc(100% - 52px);
 }
 
+.query {
+  display: flex;
+  height: calc(100% - 52px);
+}
+
 .group,
 .subGroup {
   flex: 0 0 15%;
