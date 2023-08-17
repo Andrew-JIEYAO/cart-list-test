@@ -75,6 +75,7 @@ export class CartListComponent implements OnInit {
 
   onCancel() {
     this.isSearch = this.isSearch && !this.isSearch;
+    this.query = '';
     this.value = this.initValue;
   }
 
