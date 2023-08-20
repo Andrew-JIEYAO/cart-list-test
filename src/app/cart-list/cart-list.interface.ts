@@ -17,3 +17,8 @@ export interface Coding {
   display: string;
   userSelected?: boolean;
 }
+
+export interface CartItem {
+  title: string;
+  items: Coding[];
+}
