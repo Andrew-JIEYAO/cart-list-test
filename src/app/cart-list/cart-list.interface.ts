@@ -20,5 +20,5 @@ export interface Coding {
 
 export interface CartItem {
   title: string;
-  items: Coding[];
+  item: Coding;
 }

@@ -15,7 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 export class AppComponent {
 
   title = 'cart-list-test';
-  cartValue: Group[] = [
+  value: Group[] = [
     {
       "groupName": "披薩",
       "subGroups": [
@@ -166,6 +166,7 @@ export class AppComponent {
   showDialog() {
     this.visible = true;
   }
+
   hideDialog() {
     this.visible = false;
   }
@@ -179,8 +180,12 @@ export class AppComponent {
     }
   }
 
+  onResult(result: Coding[]) {
+    this.items = result;
+  }
+
   #getData(query: string) {
-    this.cartValue = [
+    this.value = [
       {
         "groupName": "漢堡",
         "subGroups": [

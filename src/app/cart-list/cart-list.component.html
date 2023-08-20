@@ -40,7 +40,7 @@
                   <div class="item-title">{{group.groupName}}>{{subGroup.subGroupName}}</div>
                   <div class="query-grid">
                     <button *ngFor="let item of subGroup.items"
-                      (click)="onQueryClick(item, group.groupName, subGroup.subGroupName)">
+                      (click)="onItemClick(item, group, subGroup)">
                       <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                         background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                       {{ item.display }}
@@ -51,7 +51,7 @@
               <ng-container *ngIf="group.items">
                 <div class="item-title">{{group.groupName}}</div>
                 <div class="query-grid">
-                  <button *ngFor="let item of group.items" (click)="onQueryClick(item, group.groupName)">
+                  <button *ngFor="let item of group.items" (click)="onItemClick(item, group)">
                     <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                         background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                     {{ item.display }}
@@ -67,10 +67,10 @@
         <div class="cart-title">加入晚餐清單</div>
         <div *ngFor="let group of cart" class="cart-list">
           <div class="cart-head">{{ group[0] }}</div>
-          <li *ngFor="let coding of group[1]" (click)="onCartClick(coding)">
+          <li *ngFor="let cartItem of group[1]" (click)="onCartClick(cartItem)">
             <i class="pi pi-minus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
             background: var(--error-container, #F8D7D6);font-size: 0.5rem;padding: 5px;"></i>
-            {{ coding.display }}
+            {{ cartItem.item.display }}
           </li>
         </div>
       </div>
@@ -88,7 +88,7 @@
           <div *ngFor="let subGroup of subGroups" class="item-list">
             <div class="item-title">{{ group.groupName }} > {{ subGroup.subGroupName }}</div>
             <div class="item-grid">
-              <button *ngFor="let item of subGroup.items" (click)="onItemClick(item, subGroup)">
+              <button *ngFor="let item of subGroup.items" (click)="onItemClick(item, group, subGroup)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ item.display }}
@@ -102,7 +102,7 @@
         <div class="item">
           <div class="item-title">{{ group.groupName }}</div>
           <div class="item-grid">
-            <button *ngFor="let item of group.items" (click)="onItemClick(item)">
+            <button *ngFor="let item of group.items" (click)="onItemClick(item, group)">
               <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                 background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
               {{ item.display }}

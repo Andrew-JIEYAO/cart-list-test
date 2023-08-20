@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Coding, Group, SubGroup } from './cart-list.interface';
+import { CartItem, Coding, Group, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
 import "@his-base/array-extension";
 
@@ -14,14 +14,14 @@ import "@his-base/array-extension";
 export class CartListComponent implements OnInit {
 
   @Input() value: Group[] = [];
-  @Input() codings: Coding[] = [];
-  @Output() codingsChange = new EventEmitter<Coding[]>();
+  @Output() result = new EventEmitter<Coding[]>();
   @Output() hide = new EventEmitter<void>;
   @Output() search = new EventEmitter<string>;
   initValue: Group[] = [];
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
-  selectedCodings: Coding[] = [];
+  cartItems: CartItem[] = [];
+  codings: Coding[] = [];
   cart: any[] = [];
   query: string = '';
   isSearch: boolean = false;
@@ -49,20 +49,21 @@ export class CartListComponent implements OnInit {
     }
   }
 
-  onItemClick(coding: Coding, subGroup?: SubGroup) {
+  onItemClick(coding: Coding, group: Group, subGroup?: SubGroup) {
     const isExist = this.#checkCodingExist(coding.code);
-    if (!isExist) this.#addCoding(coding, subGroup);
-    this.#setCart();
+    if (!isExist) this.#addCoding(coding, group, subGroup);
+    this.#groupByCart();
   }
 
-  onCartClick(coding: Coding) {
-    const index = this.selectedCodings.indexOf(coding);
-    if (index !== -1) this.selectedCodings.splice(index, 1);
-    this.#setCart();
+  onCartClick(cartItem: CartItem) {
+    const index = this.cartItems.indexOf(cartItem);
+    if (index !== -1) this.cartItems.splice(index, 1);
+    this.#groupByCart();
   }
 
   onOkClick() {
-    this.codingsChange.emit(this.selectedCodings);
+    this.codings = this.cartItems.map((i) => i.item);
+    this.result.emit(this.codings);
     this.hide.emit();
   }
 
@@ -79,12 +80,6 @@ export class CartListComponent implements OnInit {
     this.value = this.initValue;
   }
 
-  onQueryClick(coding: Coding, groupName: string, subGroupName?: string) {
-    const isExist = this.#checkCodingExist(coding.code);
-    if (!isExist) this.#addQueryCoding(coding, groupName, subGroupName);
-    this.#setCart();
-  }
-
   #cleanCheck(): void {
     this.value.forEach(group => {
       if (group.subGroups) {
@@ -96,37 +91,26 @@ export class CartListComponent implements OnInit {
   }
 
   #checkCodingExist(code: string): boolean {
-    for (const coding of this.selectedCodings) {
-      if (coding.code === code) {
+    for (const cartItem of this.cartItems) {
+      if (cartItem.item.code === code) {
         return true;
       };
     }
     return false;
   }
 
-  #addCoding(coding: Coding, subGroup?: SubGroup) {
-    const groupName = this.currentGroup.groupName;
+  #addCoding(coding: Coding, group: Group, subGroup?: SubGroup) {
+    const groupName = group.groupName;
     const subGroupName = subGroup ? `>${subGroup.subGroupName}` : "";
     const newCoding = coding;
-    this.selectedCodings.push({
-      code: newCoding.code,
-      display: newCoding.display,
-      version: `${groupName}${subGroupName}`
+    this.cartItems.push({
+      title: `${groupName}${subGroupName}`,
+      item: newCoding
     });
   }
 
-  #addQueryCoding(coding: Coding, groupName: string, subGroupName?: string) {
-    const stair = subGroupName ? `${groupName}>${subGroupName}` : groupName;
-    const newCoding = coding;
-    this.selectedCodings.push({
-      code: newCoding.code,
-      display: newCoding.display,
-      version: stair
-    });
-  }
-
-  #setCart(): void {
-    const tmp = this.selectedCodings.groupBy((a) => a.version);
+  #groupByCart(): void {
+    const tmp = this.cartItems.groupBy((a) => a.title);
     this.cart = Object.entries(tmp);
   }
 }
