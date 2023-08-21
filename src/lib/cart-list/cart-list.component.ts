@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItem, Coding, Group, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
@@ -14,15 +14,15 @@ import "@his-base/array-extension";
 export class CartListComponent implements OnInit, OnChanges {
 
   @Input() value: Group[] = [];
-  @Output() resultSelect = new EventEmitter<Coding[]>();
+  @Output() okClick = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
 
   cartItems: WritableSignal<CartItem[]> = signal([]);
-  groupItems = computed(() => this.cartItems().groupBy(v => v.title))
-  groupTitle = computed(() => Object.keys(this.groupItems()))
+  groupItems: Signal<Record<string, CartItem[]>> = computed(() => this.cartItems().groupBy(v => v.title));
+  groupTitles: Signal<string[]> = computed(() => Object.keys(this.groupItems()));
 
   keyword: string = '';
   isSearch: boolean = false;
@@ -85,7 +85,7 @@ export class CartListComponent implements OnInit, OnChanges {
    * 點選ok，將購物車的 item去掉title，並送出去
    */
   onOkClick() {
-    this.resultSelect.emit(this.cartItems().map((i) => i.item));
+    this.okClick.emit(this.cartItems().map((i) => i.item));
   }
 
   /**

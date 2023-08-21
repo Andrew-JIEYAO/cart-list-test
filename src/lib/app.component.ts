@@ -175,7 +175,7 @@ export class AppComponent {
     }
   }
 
-  onResultSelect(result: Coding[]) {
+  onOkClick(result: Coding[]) {
     this.items = result;
     this.visible = false;
   }
