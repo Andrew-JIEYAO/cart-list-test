@@ -21,7 +21,7 @@ export class AppComponent {
       "subGroups": [
         {
           "subGroupName": "個人披薩",
-          "showItems": false,
+          "isShow": false,
           "items": [
             {
               "code": "110",
@@ -43,7 +43,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "經典口味",
-          "showItems": false,
+          "isShow": false,
           "items": [
             {
               "code": "114",
@@ -69,7 +69,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "期間限定",
-          "showItems": false,
+          "isShow": false,
           "items": [
             {
               "code": "119",
@@ -96,7 +96,7 @@ export class AppComponent {
       "subGroups": [
         {
           "subGroupName": "米漢堡",
-          "showItems": false,
+          "isShow": false,
           "items": [
             {
               "code": "123",
@@ -114,7 +114,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "麵包漢堡",
-          "showItems": false,
+          "isShow": false,
           "items": [
             {
               "code": "126",
@@ -186,7 +186,7 @@ export class AppComponent {
         "subGroups": [
           {
             "subGroupName": "米漢堡",
-            "showItems": false,
+            "isShow": false,
             "items": [
               {
                 "code": "123",
@@ -204,7 +204,7 @@ export class AppComponent {
           },
           {
             "subGroupName": "麵包漢堡",
-            "showItems": false,
+            "isShow": false,
             "items": [
               {
                 "code": "126",

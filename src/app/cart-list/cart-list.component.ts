@@ -17,18 +17,17 @@ export class CartListComponent implements OnInit {
   @Output() resultSelected = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
-  initValue: Group[] = [];
+  #initValue: Group[] = [];
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
   cartItems: CartItem[] = [];
-  result: Coding[] = [];
   cart: Array<[string, Array<CartItem>]> = [];
   keyword: string = '';
   isSearch: boolean = false;
 
   ngOnInit(): void {
     this.#cleanCheck();
-    this.initValue = this.value;
+    this.#initValue = this.value;
     this.currentGroup = this.value[0]
   }
 
@@ -39,7 +38,7 @@ export class CartListComponent implements OnInit {
   }
 
   onSubGroupClick(subGroup: SubGroup) {
-    if (subGroup.showItems) {
+    if (subGroup.isShow) {
       this.subGroups.push(subGroup);
     } else {
       const index = this.subGroups.indexOf(subGroup);
@@ -50,8 +49,7 @@ export class CartListComponent implements OnInit {
   }
 
   onItemClick(coding: Coding, group: Group, subGroup?: SubGroup) {
-    const isExist = this.#checkCodingExist(coding.code);
-    if (!isExist) this.#addCoding(coding, group, subGroup);
+    this.#addCoding(coding, group, subGroup);
     this.#groupingCart();
   }
 
@@ -62,8 +60,7 @@ export class CartListComponent implements OnInit {
   }
 
   onOkClick() {
-    this.result = this.cartItems.map((i) => i.item);
-    this.resultSelected.emit(this.result);
+    this.resultSelected.emit(this.cartItems.map((i) => i.item));
   }
 
   onSearch() {
@@ -76,36 +73,29 @@ export class CartListComponent implements OnInit {
   onSearchCancel() {
     this.isSearch = this.isSearch && !this.isSearch;
     this.keyword = '';
-    this.value = this.initValue;
+    this.value = this.#initValue;
   }
 
   #cleanCheck(): void {
     this.value.forEach(group => {
       if (group.subGroups) {
         group.subGroups.forEach(subGroup => {
-          subGroup.showItems = false;
+          subGroup.isShow = false;
         });
       }
     });
   }
 
-  #checkCodingExist(code: string): boolean {
-    for (const cartItem of this.cartItems) {
-      if (cartItem.item.code === code) {
-        return true;
-      };
-    }
-    return false;
-  }
-
   #addCoding(coding: Coding, group: Group, subGroup?: SubGroup): void {
-    const groupName = group.groupName;
-    const subGroupName = subGroup ? `>${subGroup.subGroupName}` : "";
-    const newCoding = coding;
-    this.cartItems.push({
-      title: `${groupName}${subGroupName}`,
-      item: newCoding
-    });
+    if (!this.cartItems.some((i) => i.item.code === coding.code)) {
+      const groupName = group.groupName;
+      const subGroupName = subGroup ? `>${subGroup.subGroupName}` : "";
+      const newCoding = coding;
+      this.cartItems.push({
+        title: `${groupName}${subGroupName}`,
+        item: newCoding
+      });
+    }
   }
 
   #groupingCart(): void {

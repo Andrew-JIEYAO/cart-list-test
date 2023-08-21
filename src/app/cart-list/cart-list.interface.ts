@@ -6,7 +6,7 @@ export interface Group {
 
 export interface SubGroup {
   subGroupName: string;
-  showItems: boolean;
+  isShow: boolean;
   items: Coding[];
 }
 
