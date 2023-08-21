@@ -37,12 +37,20 @@ export class CartListComponent implements OnInit, OnChanges {
     if(value) this.value = structuredClone(value.currentValue);
   }
 
+  /**
+   * 取得使用者當前點選到的group
+   * @param group 點選到的group
+   */
   onGroupClick(group: Group) {
     this.subGroups = [];
     this.value = structuredClone(this.#initValue);
     this.currentGroup = group;
   }
 
+  /**
+   * 取得有被勾選到的subGroup，並顯示底下的item
+   * @param subGroup 點選到的subGroup checkbox
+   */
   onSubGroupClick(subGroup: SubGroup) {
     if (subGroup.isShow) {
       this.subGroups.push(subGroup);
@@ -54,19 +62,35 @@ export class CartListComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * 將點選到的 item 加到購物車中
+   * @param coding 點選到的item
+   * @param group 該 item 的 group
+   * @param subGroup 該 item 的 subGroup 有可能不存在
+   */
   onItemClick(coding: Coding, group: Group, subGroup?: SubGroup) {
     this.#addItem(coding, group, subGroup);
   }
 
+  /**
+   * 將購物車中的 item，拿掉
+   * @param cartItem 點選到購物車中的 item
+   */
   onCartClick(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
 
+  /**
+   * 點選ok，將購物車的 item去掉title，並送出去
+   */
   onOkClick() {
     this.resultSelect.emit(this.cartItems().map((i) => i.item));
   }
 
+  /**
+   * 將搜尋bar輸入的字串送出去給外部撈取資料
+   */
   onSearch() {
     if (this.keyword !== '') {
       this.search.emit(this.keyword);
@@ -74,12 +98,21 @@ export class CartListComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * 搜尋bar取消搜尋，將原先導覽的方式放回來
+   */
   onSearchCancel() {
     this.isSearch = this.isSearch && !this.isSearch;
     this.keyword = '';
     this.value = this.#initValue;
   }
 
+  /**
+   * 將點選到的 item 加到購物車中的私有方法
+   * @param coding 點選到的item
+   * @param group 該 item 的 group
+   * @param subGroup 該 item 的 subGroup 有可能不存在
+   */
   #addItem(coding: Coding, group: Group, subGroup?: SubGroup): void {
     const itemTilte = group.groupName.concat(subGroup ? `>${subGroup.subGroupName}` : "");
     this.cartItems.mutate(a => a.push({
