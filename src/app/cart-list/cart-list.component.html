@@ -65,9 +65,9 @@
 
       <div class="cart">
         <div class="cart-title">加入晚餐清單</div>
-        <div *ngFor="let group of cart" class="cart-list">
-          <div class="cart-head">{{ group[0] }}</div>
-          <li *ngFor="let cartItem of group[1]" (click)="onCartClick(cartItem)">
+        <div *ngFor="let title of groupTitle()" class="cart-list">
+          <div class="cart-head">{{ title }}</div>
+          <li *ngFor="let cartItem of groupItems()[title]" (click)="onCartClick(cartItem)">
             <i class="pi pi-minus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
             background: var(--error-container, #F8D7D6);font-size: 0.5rem;padding: 5px;"></i>
             {{ cartItem.item.display }}
