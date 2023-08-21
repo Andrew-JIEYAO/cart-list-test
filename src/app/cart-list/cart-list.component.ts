@@ -38,7 +38,7 @@ export class CartListComponent implements OnInit {
     this.currentGroup = group;
   }
 
-  onSubGroupChange(subGroup: SubGroup) {
+  onSubGroupClick(subGroup: SubGroup) {
     if (subGroup.showItems) {
       this.subGroups.push(subGroup);
     } else {
@@ -98,7 +98,7 @@ export class CartListComponent implements OnInit {
     return false;
   }
 
-  #addCoding(coding: Coding, group: Group, subGroup?: SubGroup) {
+  #addCoding(coding: Coding, group: Group, subGroup?: SubGroup): void {
     const groupName = group.groupName;
     const subGroupName = subGroup ? `>${subGroup.subGroupName}` : "";
     const newCoding = coding;

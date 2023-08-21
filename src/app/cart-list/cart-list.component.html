@@ -79,7 +79,7 @@
         <div class="subGroup">
           <div class="subGroup-list">
             <div *ngFor="let subGroup of group.subGroups">
-              <input type="checkbox" [(ngModel)]="subGroup.showItems" (change)="onSubGroupChange(subGroup)" />
+              <input type="checkbox" [(ngModel)]="subGroup.showItems" (change)="onSubGroupClick(subGroup)" />
               {{ subGroup.subGroupName }}
             </div>
           </div>
