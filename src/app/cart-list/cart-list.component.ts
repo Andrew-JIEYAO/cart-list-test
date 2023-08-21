@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItem, Coding, Group, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
@@ -11,13 +11,12 @@ import "@his-base/array-extension";
   templateUrl: './cart-list.component.html',
   styleUrls: ['./cart-list.component.scss']
 })
-export class CartListComponent implements OnInit {
+export class CartListComponent implements OnInit, OnChanges {
 
   @Input() value: Group[] = [];
   @Output() resultSelect = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
-  #initValue: Group[] = [];
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
 
@@ -27,17 +26,20 @@ export class CartListComponent implements OnInit {
 
   keyword: string = '';
   isSearch: boolean = false;
+  #initValue: Group[] = [];
 
   ngOnInit(): void {
-    this.#initValue = this.value;
-    this.currentGroup = this.value[0]
+    this.#initValue = structuredClone(this.value);
+    this.currentGroup = this.value[0] || {};
+  }
+
+  ngOnChanges({value}: SimpleChanges): void {
+    if(value) this.value = structuredClone(value.currentValue);
   }
 
   onGroupClick(group: Group) {
     this.subGroups = [];
-    if(this.currentGroup.subGroups) {
-      this.currentGroup.subGroups.map((i) => i.isShow = false);
-    }
+    this.value = structuredClone(this.#initValue);
     this.currentGroup = group;
   }
 
@@ -58,8 +60,6 @@ export class CartListComponent implements OnInit {
 
   onCartClick(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
-    console.log(index);
-
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
 
