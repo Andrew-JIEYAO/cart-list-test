@@ -161,30 +161,25 @@ export class AppComponent {
   items: Coding[] = [];
   visible: boolean = false;
 
-  queryValue: Group[] = [];
-
   showDialog() {
     this.visible = true;
   }
 
-  hideDialog() {
-    this.visible = false;
-  }
-
-  async onSearch(query: string) {
+  async onSearch(keyword: string) {
     try {
-      await this.#getData(query);
+      await this.#searchData(keyword);
     }
     catch (error) {
       console.log(error);
     }
   }
 
-  onResult(result: Coding[]) {
+  onResultSelected(result: Coding[]) {
     this.items = result;
+    this.visible = false;
   }
 
-  #getData(query: string) {
+  #searchData(query: string) {
     this.value = [
       {
         "groupName": "漢堡",

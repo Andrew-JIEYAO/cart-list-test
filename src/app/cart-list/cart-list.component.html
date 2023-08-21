@@ -6,7 +6,7 @@
           <div class="search-container">
             <div class="search-input-container">
               <i class="pi pi-search"></i>
-              <input type="text" class="search-input" placeholder="請輸入醫令或關鍵字" [(ngModel)]="query"
+              <input type="text" class="search-input" placeholder="請輸入醫令或關鍵字" [(ngModel)]="keyword"
                 (keyup.enter)="onSearch()" />
                 <i *ngIf="isSearch" class="pi pi-times" (click)="onCancel()"></i>
             </div>

@@ -14,16 +14,16 @@ import "@his-base/array-extension";
 export class CartListComponent implements OnInit {
 
   @Input() value: Group[] = [];
-  @Output() result = new EventEmitter<Coding[]>();
-  @Output() hide = new EventEmitter<void>;
+  @Output() resultSelected = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
+
   initValue: Group[] = [];
   currentGroup: Group = {} as Group;
   subGroups: SubGroup[] = [];
   cartItems: CartItem[] = [];
-  codings: Coding[] = [];
-  cart: any[] = [];
-  query: string = '';
+  result: Coding[] = [];
+  cart: Array<[string, Array<CartItem>]> = [];
+  keyword: string = '';
   isSearch: boolean = false;
 
   ngOnInit(): void {
@@ -52,31 +52,30 @@ export class CartListComponent implements OnInit {
   onItemClick(coding: Coding, group: Group, subGroup?: SubGroup) {
     const isExist = this.#checkCodingExist(coding.code);
     if (!isExist) this.#addCoding(coding, group, subGroup);
-    this.#groupByCart();
+    this.#groupingCart();
   }
 
   onCartClick(cartItem: CartItem) {
     const index = this.cartItems.indexOf(cartItem);
     if (index !== -1) this.cartItems.splice(index, 1);
-    this.#groupByCart();
+    this.#groupingCart();
   }
 
   onOkClick() {
-    this.codings = this.cartItems.map((i) => i.item);
-    this.result.emit(this.codings);
-    this.hide.emit();
+    this.result = this.cartItems.map((i) => i.item);
+    this.resultSelected.emit(this.result);
   }
 
-  async onSearch() {
-    if (this.query !== '') {
-      await this.search.emit(this.query);
+  onSearch() {
+    if (this.keyword !== '') {
+      this.search.emit(this.keyword);
       this.isSearch = this.isSearch || !this.isSearch;
     }
   }
 
   onCancel() {
     this.isSearch = this.isSearch && !this.isSearch;
-    this.query = '';
+    this.keyword = '';
     this.value = this.initValue;
   }
 
@@ -109,7 +108,7 @@ export class CartListComponent implements OnInit {
     });
   }
 
-  #groupByCart(): void {
+  #groupingCart(): void {
     const tmp = this.cartItems.groupBy((a) => a.title);
     this.cart = Object.entries(tmp);
   }
