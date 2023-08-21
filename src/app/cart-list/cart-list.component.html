@@ -8,7 +8,7 @@
               <i class="pi pi-search"></i>
               <input type="text" class="search-input" placeholder="請輸入醫令或關鍵字" [(ngModel)]="keyword"
                 (keyup.enter)="onSearch()" />
-                <i *ngIf="isSearch" class="pi pi-times" (click)="onCancel()"></i>
+                <i *ngIf="isSearch" class="pi pi-times" (click)="onSearchCancel()"></i>
             </div>
             <button class="search-button" (click)="onSearch()">搜尋</button>
           </div>
