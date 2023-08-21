@@ -14,7 +14,7 @@ import "@his-base/array-extension";
 export class CartListComponent implements OnInit {
 
   @Input() value: Group[] = [];
-  @Output() resultSelected = new EventEmitter<Coding[]>();
+  @Output() resultSelect = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
   #initValue: Group[] = [];
@@ -24,7 +24,6 @@ export class CartListComponent implements OnInit {
   cartItems: WritableSignal<CartItem[]> = signal([]);
   groupItems = computed(() => this.cartItems().groupBy(v => v.title))
   groupTitle = computed(() => Object.keys(this.groupItems()))
-
 
   keyword: string = '';
   isSearch: boolean = false;
@@ -36,6 +35,9 @@ export class CartListComponent implements OnInit {
 
   onGroupClick(group: Group) {
     this.subGroups = [];
+    if(this.currentGroup.subGroups) {
+      this.currentGroup.subGroups.map((i) => i.isShow = false);
+    }
     this.currentGroup = group;
   }
 
@@ -58,11 +60,11 @@ export class CartListComponent implements OnInit {
     const index = this.cartItems().indexOf(cartItem);
     console.log(index);
 
-    if (index !== -1) this.cartItems.update(a => a.splice(index, 1));
+    if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
 
   onOkClick() {
-    this.resultSelected.emit(this.cartItems().map((i) => i.item));
+    this.resultSelect.emit(this.cartItems().map((i) => i.item));
   }
 
   onSearch() {
@@ -78,7 +80,6 @@ export class CartListComponent implements OnInit {
     this.value = this.#initValue;
   }
 
-
   #addItem(coding: Coding, group: Group, subGroup?: SubGroup): void {
     const itemTilte = group.groupName.concat(subGroup ? `>${subGroup.subGroupName}` : "");
     this.cartItems.mutate(a => a.push({
@@ -87,5 +88,4 @@ export class CartListComponent implements OnInit {
     }));
     this.cartItems.update(a => a.distinct((v) => v.item.code))
   }
-
 }

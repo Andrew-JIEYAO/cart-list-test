@@ -174,7 +174,7 @@ export class AppComponent {
     }
   }
 
-  onResultSelected(result: Coding[]) {
+  onResultSelect(result: Coding[]) {
     this.items = result;
     this.visible = false;
   }
