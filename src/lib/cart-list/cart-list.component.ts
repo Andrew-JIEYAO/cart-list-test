@@ -14,7 +14,7 @@ import "@his-base/array-extension";
 export class CartListComponent implements OnInit, OnChanges {
 
   @Input() value: Group[] = [];
-  @Output() okClick = new EventEmitter<Coding[]>();
+  @Output() addCart = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
   currentGroup: Group = {} as Group;
@@ -52,7 +52,7 @@ export class CartListComponent implements OnInit, OnChanges {
    * @param subGroup 點選到的subGroup checkbox
    */
   onSubGroupClick(subGroup: SubGroup) {
-    if (subGroup.isShow) {
+    if (subGroup.isChecked) {
       this.subGroups.push(subGroup);
     } else {
       const index = this.subGroups.indexOf(subGroup);
@@ -68,7 +68,7 @@ export class CartListComponent implements OnInit, OnChanges {
    * @param group 該 item 的 group
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
-  onItemClick(coding: Coding, group: Group, subGroup?: SubGroup) {
+  addCartClick(coding: Coding, group: Group, subGroup?: SubGroup) {
     this.#addItem(coding, group, subGroup);
   }
 
@@ -76,7 +76,7 @@ export class CartListComponent implements OnInit, OnChanges {
    * 將購物車中的 item，拿掉
    * @param cartItem 點選到購物車中的 item
    */
-  onCartClick(cartItem: CartItem) {
+  removeCartClick(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
@@ -85,7 +85,7 @@ export class CartListComponent implements OnInit, OnChanges {
    * 點選ok，將購物車的 item去掉title，並送出去
    */
   onOkClick() {
-    this.okClick.emit(this.cartItems().map((i) => i.item));
+    this.addCart.emit(this.cartItems().map((i) => i.item));
   }
 
   /**

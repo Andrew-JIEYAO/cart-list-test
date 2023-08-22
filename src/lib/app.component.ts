@@ -22,7 +22,7 @@ export class AppComponent {
       "subGroups": [
         {
           "subGroupName": "個人披薩",
-          "isShow": false,
+          "isChecked": false,
           "items": [
             {
               "code": "110",
@@ -44,7 +44,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "經典口味",
-          "isShow": false,
+          "isChecked": false,
           "items": [
             {
               "code": "114",
@@ -70,7 +70,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "期間限定",
-          "isShow": false,
+          "isChecked": false,
           "items": [
             {
               "code": "119",
@@ -97,7 +97,7 @@ export class AppComponent {
       "subGroups": [
         {
           "subGroupName": "米漢堡",
-          "isShow": false,
+          "isChecked": false,
           "items": [
             {
               "code": "123",
@@ -115,7 +115,7 @@ export class AppComponent {
         },
         {
           "subGroupName": "麵包漢堡",
-          "isShow": false,
+          "isChecked": false,
           "items": [
             {
               "code": "126",
@@ -175,7 +175,7 @@ export class AppComponent {
     }
   }
 
-  onOkClick(result: Coding[]) {
+  onAddCart(result: Coding[]) {
     this.items = result;
     this.visible = false;
   }
@@ -187,7 +187,7 @@ export class AppComponent {
         "subGroups": [
           {
             "subGroupName": "米漢堡",
-            "isShow": false,
+            "isChecked": false,
             "items": [
               {
                 "code": "123",
@@ -205,7 +205,7 @@ export class AppComponent {
           },
           {
             "subGroupName": "麵包漢堡",
-            "isShow": false,
+            "isChecked": false,
             "items": [
               {
                 "code": "126",
