@@ -12,19 +12,8 @@ import "@his-base/array-extension";
   styleUrls: ['./cart-list.component.scss']
 })
 export class CartListComponent implements OnChanges, OnInit {
-  ngOnInit(): void {
-    this.currentGroup = this.groupValue[0] || {};
-  }
 
-  ngOnChanges({ itemValue }: SimpleChanges): void {
-    if (itemValue && itemValue.currentValue.group) {
-      this.itemPool.set(`${itemValue.currentValue.group.code}${itemValue.currentValue.subGroup
-                        ? itemValue.currentValue.subGroup.code : ''}`, itemValue.currentValue);
-      this.menuItems.push(itemValue.currentValue);
-    }
-  }
-
-  @Output() addResult = new EventEmitter<Coding[]>();
+  @Output() addCart = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
   @Output() getMenuItem = new EventEmitter<ItemKey>;
 
@@ -43,6 +32,18 @@ export class CartListComponent implements OnChanges, OnInit {
   keyword: string = '';
   isSearch: boolean = false;
 
+  ngOnInit(): void {
+    this.currentGroup = this.groupValue[0] || {};
+  }
+
+  ngOnChanges({ itemValue }: SimpleChanges): void {
+    if (itemValue && itemValue.currentValue.group) {
+      const group = itemValue.currentValue.group;
+      const subGroup = itemValue.currentValue.subGroup;
+      this.itemPool.set(group.code.concat(subGroup ? subGroup.code : ''), itemValue.currentValue)
+      this.menuItems.push(itemValue.currentValue);
+    }
+  }
 
   /**
    * 取得使用者當前點選到的group
@@ -94,8 +95,8 @@ export class CartListComponent implements OnChanges, OnInit {
   /**
    * 點選ok，將購物車的 item去掉title，並送出去
    */
-  onResultClick() {
-    this.addResult.emit(this.cartItems().map((i) => i.item));
+  onOkClick() {
+    this.addCart.emit(this.cartItems().map((i) => i.item));
   }
 
   /**

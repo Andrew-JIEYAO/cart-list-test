@@ -1,7 +1,7 @@
 <div class="card flex justify-content-center">
   <p-button icon="pi pi-external-link" label="菜單" (click)="showDialog()"></p-button>
   <p-dialog header="菜單項目" [(visible)]="visible" [style]="{width: '95vw', height: '90vh'}">
-    <his-cart-list [groupValue]="groupValue" [itemValue]="itemValue" (getMenuItem)="onGetMenuItem($event)" (addResult)="onAddResult($event)"
+    <his-cart-list [groupValue]="groupValue" [itemValue]="itemValue" (getMenuItem)="onGetMenuItem($event)" (addCart)="onAddCart($event)"
                    (search)="onSearch($event)" [searchValue]="searchValue"></his-cart-list>
   </p-dialog>
 </div>

@@ -269,7 +269,7 @@ export class AppComponent {
     this.itemValue = this.#getMenuItem(key)!;
   }
 
-  onAddResult(result: Coding[]) {
+  onAddCart(result: Coding[]) {
     this.items = result;
     this.visible = false;
   }
