@@ -11,15 +11,23 @@ import "@his-base/array-extension";
   templateUrl: './cart-list.component.html',
   styleUrls: ['./cart-list.component.scss']
 })
-export class CartListComponent implements OnChanges, OnInit {
+export class CartListComponent implements OnInit {
 
   @Output() addCart = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
   @Output() getMenuItem = new EventEmitter<ItemKey>;
-
   @Input() groupValue: Group[] = [];
-  @Input() itemValue: MenuItem = {} as MenuItem;
   @Input() searchValue: MenuItem[] = []
+
+  #itemValue: MenuItem = {} as MenuItem;
+  @Input()
+  set itemValue(value: MenuItem) {
+    this.#setMenuItem(value);
+    this.#itemValue = value;
+  }
+  get itemValue(): MenuItem {
+    return this.#itemValue;
+  }
 
   itemPool: Map<string, MenuItem> = new Map();
   menuItems: MenuItem[] = [];
@@ -34,15 +42,6 @@ export class CartListComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.currentGroup = this.groupValue[0] || {};
-  }
-
-  ngOnChanges({ itemValue }: SimpleChanges): void {
-    if (itemValue && itemValue.currentValue.group) {
-      const group = itemValue.currentValue.group;
-      const subGroup = itemValue.currentValue.subGroup;
-      this.itemPool.set(group.code.concat(subGroup ? subGroup.code : ''), itemValue.currentValue)
-      this.menuItems.push(itemValue.currentValue);
-    }
   }
 
   /**
@@ -62,7 +61,7 @@ export class CartListComponent implements OnChanges, OnInit {
    * 取得有被勾選到的subGroup，並顯示底下的item
    * @param subGroup 點選到的subGroup checkbox
    */
-  onSubGroupClick(group: Group, subGroup: SubGroup ) {
+  onSubGroupClick(group: Group, subGroup: SubGroup) {
     if (subGroup.isChecked) {
       this.#getManuItem(group, subGroup);
     } else {
@@ -145,5 +144,16 @@ export class CartListComponent implements OnChanges, OnInit {
     } else {
       this.menuItems.push(this.itemPool.get(key)!);
     }
+  }
+
+  /**
+   *
+   * @param menuItem
+   */
+  #setMenuItem(menuItem: MenuItem) {
+    const group = menuItem.group;
+    const subGroup = menuItem.subGroup;
+    this.itemPool.set(group.code.concat(subGroup ? subGroup.code : ''), menuItem)
+    this.menuItems.push(menuItem);
   }
 }

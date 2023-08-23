@@ -264,7 +264,7 @@ export class AppComponent {
 
   onGetMenuItem(key: ItemKey) {
     // setTimeout(() => {
-    //   this.itemValue = this.#getItem(pullKey)!;
+    //   this.itemValue = this.#getMenuItem(key)!;
     // }, 1000);
     this.itemValue = this.#getMenuItem(key)!;
   }
