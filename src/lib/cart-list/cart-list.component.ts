@@ -86,7 +86,7 @@ export class CartListComponent implements OnInit {
    * 將購物車中的 item，拿掉
    * @param cartItem 點選到購物車中的 item
    */
-  deleteCartClick(cartItem: CartItem) {
+  removeCartClick(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
