@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartItem, Coding, Group, MenuItem, PullKey, SubGroup } from './cart-list.interface';
+import { CartItem, Coding, Group, MenuItem, ItemKey, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
 import "@his-base/array-extension";
 
@@ -11,26 +11,29 @@ import "@his-base/array-extension";
   templateUrl: './cart-list.component.html',
   styleUrls: ['./cart-list.component.scss']
 })
-export class CartListComponent implements OnChanges {
+export class CartListComponent implements OnChanges, OnInit {
+  ngOnInit(): void {
+    this.currentGroup = this.groupValue[0] || {};
+  }
+
   ngOnChanges({ itemValue }: SimpleChanges): void {
-    if (itemValue.currentValue.group) {
-      console.log(itemValue.currentValue);
-      this.pool.set(`${itemValue.currentValue.group.code}${itemValue.currentValue.subGroup ? itemValue.currentValue.subGroup.code : ''}`, itemValue.currentValue);
-      console.log(this.pool);
+    if (itemValue && itemValue.currentValue.group) {
+      this.itemPool.set(`${itemValue.currentValue.group.code}${itemValue.currentValue.subGroup
+                        ? itemValue.currentValue.subGroup.code : ''}`, itemValue.currentValue);
       this.menuItems.push(itemValue.currentValue);
     }
   }
 
-  @Input() value: Group[] = [];
-  @Output() addCart = new EventEmitter<Coding[]>();
+  @Output() addResult = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
+  @Output() getMenuItem = new EventEmitter<ItemKey>;
 
   @Input() groupValue: Group[] = [];
   @Input() itemValue: MenuItem = {} as MenuItem;
-  @Output() pullItem = new EventEmitter<PullKey>;
-  pool: Map<string, MenuItem> = new Map();
-  menuItems: MenuItem[] = [];
+  @Input() searchValue: MenuItem[] = []
 
+  itemPool: Map<string, MenuItem> = new Map();
+  menuItems: MenuItem[] = [];
   currentGroup: Group = {} as Group;
 
   cartItems: WritableSignal<CartItem[]> = signal([]);
@@ -39,7 +42,6 @@ export class CartListComponent implements OnChanges {
 
   keyword: string = '';
   isSearch: boolean = false;
-  #initValue: Group[] = [];
 
 
   /**
@@ -50,17 +52,8 @@ export class CartListComponent implements OnChanges {
     if (this.currentGroup !== group) {
       this.menuItems = [];
       if (this.currentGroup.subGroups) this.currentGroup.subGroups.map((s) => s.isChecked = false);
-      if (!group.subGroups) this.#pullItem(group);
+      if (!group.subGroups) this.#getManuItem(group);
       this.currentGroup = group;
-    }
-  }
-
-  #pullItem(group: Group, subGroup?: SubGroup) {
-    const key = `${group.info.code}${subGroup ? subGroup.info.code : ''}`;
-    if (!this.pool.has(key)) {
-      this.pullItem.emit(subGroup ? { groupCode: group.info.code, subGroupCode: subGroup.info.code } : { groupCode: group.info.code });
-    } else {
-      this.menuItems.push(this.pool.get(key)!);
     }
   }
 
@@ -70,9 +63,9 @@ export class CartListComponent implements OnChanges {
    */
   onSubGroupClick(group: Group, subGroup: SubGroup ) {
     if (subGroup.isChecked) {
-      this.#pullItem(group, subGroup);
+      this.#getManuItem(group, subGroup);
     } else {
-      const index = this.menuItems.indexOf(this.pool.get(`${group.info.code}${subGroup.info.code}`)!);
+      const index = this.menuItems.indexOf(this.itemPool.get(`${group.info.code}${subGroup.info.code}`)!);
       if (index !== -1) {
         this.menuItems.splice(index, 1);
       }
@@ -85,16 +78,15 @@ export class CartListComponent implements OnChanges {
    * @param group 該 item 的 group
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
-  addCartClick(coding: Coding, group: Group, subGroup?: SubGroup) {
-    this.#addItem(coding, group, subGroup);
+  addCartClick(item: Coding, group: Coding, subGroup?: Coding) {
+    this.#addCartItem(item, group.display.concat(subGroup ? `>${subGroup.display}` : ""));
   }
-
 
   /**
    * 將購物車中的 item，拿掉
    * @param cartItem 點選到購物車中的 item
    */
-  removeCartClick(cartItem: CartItem) {
+  deleteCartClick(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
@@ -102,8 +94,8 @@ export class CartListComponent implements OnChanges {
   /**
    * 點選ok，將購物車的 item去掉title，並送出去
    */
-  onOkClick() {
-    this.addCart.emit(this.cartItems().map((i) => i.item));
+  onResultClick() {
+    this.addResult.emit(this.cartItems().map((i) => i.item));
   }
 
   /**
@@ -122,7 +114,6 @@ export class CartListComponent implements OnChanges {
   onSearchCancel() {
     this.isSearch = this.isSearch && !this.isSearch;
     this.keyword = '';
-    this.value = this.#initValue;
   }
 
   /**
@@ -131,15 +122,27 @@ export class CartListComponent implements OnChanges {
    * @param group 該 item 的 group
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
-  #addItem(coding: Coding, group: Group, subGroup?: SubGroup): void {
-    console.log('addItem');
-
-    // const itemTilte = group.groupName.concat(subGroup ? `>${subGroup.subGroupName}` : "");
-    // this.cartItems.mutate(a => a.push({
-    //   title: itemTilte,
-    //   item: coding
-    // }));
-    // this.cartItems.update(a => a.distinct((v) => v.item.code))
+  #addCartItem(item: Coding, title: string): void {
+    this.cartItems.mutate(a => a.push({
+      title: title,
+      item: item
+    }));
+    this.cartItems.update(a => a.distinct((v) => v.item.code))
   }
 
+  /**
+   *
+   * @param group
+   * @param subGroup
+   */
+  #getManuItem(group: Group, subGroup?: SubGroup) {
+    const key = `${group.info.code}${subGroup ? subGroup.info.code : ''}`;
+    if (!this.itemPool.has(key)) {
+      this.getMenuItem.emit(subGroup
+        ? { groupCode: group.info.code, subGroupCode: subGroup.info.code }
+        : { groupCode: group.info.code });
+    } else {
+      this.menuItems.push(this.itemPool.get(key)!);
+    }
+  }
 }

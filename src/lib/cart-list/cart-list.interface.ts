@@ -27,7 +27,7 @@ export interface CartItem {
   item: Coding;
 }
 
-export interface PullKey {
+export interface ItemKey {
   groupCode: string,
   subGroupCode?: string
 }

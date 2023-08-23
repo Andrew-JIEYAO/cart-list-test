@@ -18,8 +18,8 @@
           <div class="menu-content">
             <div class="group">
               <div class="group-list">
-                <li *ngFor="let group of groupValue" (click)="onGroupClick(group)">
-                  <!-- [ngClass]="currentGroup.groupName === group.groupName ? 'selected' : 'normal'"> -->
+                <li *ngFor="let group of groupValue" (click)="onGroupClick(group)"
+                  [ngClass]="currentGroup.info.code === group.info.code ? 'selected' : 'normal'">
                   {{ group.info.display }}
                 </li>
               </div>
@@ -38,45 +38,46 @@
 
         <ng-container *ngIf="isSearch">
           <div class="query">
-            <!-- <div *ngFor="let group of value">
-              <ng-container *ngIf="group.subGroups">
-                <div *ngFor="let subGroup of group.subGroups">
-                  <div class="item-title">{{group.groupName}}>{{subGroup.subGroupName}}</div>
+            <div *ngFor="let menuItem of searchValue">
+              <ng-container *ngIf="menuItem.subGroup">
+                <div>
+                  <div class="item-title">{{menuItem.group.display}}>{{menuItem.subGroup.display}}</div>
                   <div class="query-grid">
-                    <button *ngFor="let item of subGroup.items"
-                      (click)="addCartClick(item, group, subGroup)">
+                    <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group, menuItem.subGroup)">
                       <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                         background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
-                      {{ item.display }}
+                      {{ info.display }}
                     </button>
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="group.items">
-                <div class="item-title">{{group.groupName}}</div>
-                <div class="query-grid">
-                  <button *ngFor="let item of group.items" (click)="addCartClick(item, group)">
-                    <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
-                        background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
-                    {{ item.display }}
-                  </button>
+              <ng-container *ngIf="!menuItem.subGroup">
+                <div>
+                  <div class="item-title">{{menuItem.group.display}}</div>
+                  <div class="query-grid">
+                    <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group)">
+                      <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
+                          background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
+                      {{ info.display }}
+                    </button>
+                  </div>
                 </div>
               </ng-container>
-            </div> -->
+            </div>
           </div>
         </ng-container>
       </div>
       <!-- 購物車區塊 -->
       <div class="cart">
         <div class="cart-title">加入晚餐清單</div>
-        <!-- <div *ngFor="let title of groupTitles()" class="cart-list">
+        <div *ngFor="let title of groupTitles()" class="cart-list">
           <div class="cart-head">{{ title }}</div>
-          <li *ngFor="let cartItem of groupItems()[title]" (click)="removeCartClick(cartItem)">
+          <li *ngFor="let cartItem of groupItems()[title]" (click)="deleteCartClick(cartItem)">
             <i class="pi pi-minus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
             background: var(--error-container, #F8D7D6);font-size: 0.5rem;padding: 5px;"></i>
             {{ cartItem.item.display }}
           </li>
-        </div> -->
+        </div>
       </div>
       <!-- 有subGroup -->
       <ng-template #subGroup let-group>
@@ -92,8 +93,7 @@
           <div *ngFor="let menuItem of menuItems" class="item-list">
             <div class="item-title">{{ menuItem.group.display }} > {{ menuItem.subGroup?.display || '' }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of menuItem.infos" >
-                <!--  (click)="addCartClick(item, group, subGroup)" -->
+              <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group, menuItem.subGroup)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
@@ -108,7 +108,7 @@
           <ng-container *ngFor="let menuItem of menuItems">
             <div class="item-title">{{ menuItem.group.display }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of menuItem.infos">
+              <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
@@ -120,7 +120,7 @@
     </div>
     <!-- 確認按鈕區塊 -->
     <div class="button-container">
-      <button class="ok-button" (click)="onOkClick()">OK</button>
+      <button class="ok-button" (click)="onResultClick()">OK</button>
     </div>
   </div>
 </div>

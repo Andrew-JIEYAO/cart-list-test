@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartListComponent } from "./cart-list/cart-list.component";
-import { Coding, Group, MenuItem, PullKey } from './cart-list/cart-list.interface';
+import { Coding, Group, MenuItem, ItemKey } from './cart-list/cart-list.interface';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
@@ -244,7 +244,7 @@ export class AppComponent {
   ]
 
   itemValue: MenuItem = {} as MenuItem;
-
+  searchValue: MenuItem[] = [];
 
   items: Coding[] = [];
   visible: boolean = false;
@@ -262,61 +262,82 @@ export class AppComponent {
     }
   }
 
-  onPullItem(pullKey: PullKey) {
-    this.itemValue = this.#getItem(pullKey)!;
+  onGetMenuItem(key: ItemKey) {
+    // setTimeout(() => {
+    //   this.itemValue = this.#getItem(pullKey)!;
+    // }, 1000);
+    this.itemValue = this.#getMenuItem(key)!;
   }
 
-  onAddCart(result: Coding[]) {
+  onAddResult(result: Coding[]) {
     this.items = result;
     this.visible = false;
   }
 
   #searchData(query: string) {
-    console.log(query);
-    // this.value = [
-    //   {
-    //     "groupName": "漢堡",
-    //     "subGroups": [
-    //       {
-    //         "subGroupName": "米漢堡",
-    //         "isChecked": false,
-    //         "items": [
-    //           {
-    //             "code": "123",
-    //             "display": "和風板烤雞腿米漢堡"
-    //           },
-    //           {
-    //             "code": "124",
-    //             "display": "義式雞腿米漢堡"
-    //           },
-    //           {
-    //             "code": "125",
-    //             "display": "美式厚牛米漢堡"
-    //           }
-    //         ]
-    //       },
-    //       {
-    //         "subGroupName": "麵包漢堡",
-    //         "isChecked": false,
-    //         "items": [
-    //           {
-    //             "code": "126",
-    //             "display": "勁辣雞腿堡"
-    //           },
-    //           {
-    //             "code": "127",
-    //             "display": "大麥克堡"
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // ]
+    this.searchValue = [
+      {
+        "group": {
+          "code": "020",
+          "display": "漢堡"
+        },
+        "subGroup": {
+          "code": "021",
+          "display": "米漢堡"
+        },
+        "infos": [
+          {
+            "code": "123",
+            "display": "和風板烤雞腿米漢堡"
+          },
+          {
+            "code": "124",
+            "display": "義式雞腿米漢堡"
+          },
+          {
+            "code": "125",
+            "display": "美式厚牛米漢堡"
+          }
+        ]
+      },
+      {
+        "group": {
+          "code": "030",
+          "display": "其他點心"
+        },
+        "infos": [
+          {
+            "code": "101",
+            "display": "烤雞拼盤"
+          },
+          {
+            "code": "102",
+            "display": "海陸大拼盤"
+          },
+          {
+            "code": "103",
+            "display": "黃金雞柳條"
+          },
+          {
+            "code": "104",
+            "display": "黃金波浪地瓜條"
+          },
+          {
+            "code": "105",
+            "display": "麻糬QQ球"
+          },
+          {
+            "code": "106",
+            "display": "薯金幣"
+          }
+        ]
+      }
+    ];
   }
 
-  #getItem(pullKey: PullKey): MenuItem | undefined {
+  #getMenuItem(key: ItemKey): MenuItem | undefined {
     return this.itemValues.find((item) => {
-      if(item.group.code === pullKey.groupCode && (!pullKey.subGroupCode || item.subGroup?.code === pullKey.subGroupCode)) {
+      if(item.group.code === key.groupCode && (!key.subGroupCode || item.subGroup?.code === key.subGroupCode)) {
         return true;
       }
       return false;
