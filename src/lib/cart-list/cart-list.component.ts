@@ -22,7 +22,7 @@ export class CartListComponent implements OnInit {
   #itemValue: MenuItem = {} as MenuItem;
   @Input()
   set itemValue(value: MenuItem) {
-    this.#setMenuItem(value);
+    this.#setItemPool(value);
     this.#itemValue = value;
   }
   get itemValue(): MenuItem {
@@ -150,7 +150,7 @@ export class CartListComponent implements OnInit {
    *
    * @param menuItem
    */
-  #setMenuItem(menuItem: MenuItem) {
+  #setItemPool(menuItem: MenuItem) {
     const group = menuItem.group;
     const subGroup = menuItem.subGroup;
     this.itemPool.set(group.code.concat(subGroup ? subGroup.code : ''), menuItem)
