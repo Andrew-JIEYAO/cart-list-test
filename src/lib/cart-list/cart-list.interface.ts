@@ -1,13 +1,17 @@
 export interface Group {
-  groupName: string;
+  info: Coding;
   subGroups?: SubGroup[];
-  items?: Coding[];
 }
 
 export interface SubGroup {
-  subGroupName: string;
+  info: Coding;
   isChecked: boolean;
-  items: Coding[];
+}
+
+export interface MenuItem {
+  group: Coding;
+  subGroup?: Coding
+  infos: Coding[];
 }
 
 export interface Coding {
@@ -21,4 +25,9 @@ export interface Coding {
 export interface CartItem {
   title: string;
   item: Coding;
+}
+
+export interface PullKey {
+  groupCode: string,
+  subGroupCode?: string
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartItem, Coding, Group, SubGroup } from './cart-list.interface';
+import { CartItem, Coding, Group, MenuItem, PullKey, SubGroup } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
 import "@his-base/array-extension";
 
@@ -11,14 +11,27 @@ import "@his-base/array-extension";
   templateUrl: './cart-list.component.html',
   styleUrls: ['./cart-list.component.scss']
 })
-export class CartListComponent implements OnInit, OnChanges {
+export class CartListComponent implements OnChanges {
+  ngOnChanges({ itemValue }: SimpleChanges): void {
+    if (itemValue.currentValue.group) {
+      console.log(itemValue.currentValue);
+      this.pool.set(`${itemValue.currentValue.group.code}${itemValue.currentValue.subGroup ? itemValue.currentValue.subGroup.code : ''}`, itemValue.currentValue);
+      console.log(this.pool);
+      this.menuItems.push(itemValue.currentValue);
+    }
+  }
 
   @Input() value: Group[] = [];
   @Output() addCart = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
 
+  @Input() groupValue: Group[] = [];
+  @Input() itemValue: MenuItem = {} as MenuItem;
+  @Output() pullItem = new EventEmitter<PullKey>;
+  pool: Map<string, MenuItem> = new Map();
+  menuItems: MenuItem[] = [];
+
   currentGroup: Group = {} as Group;
-  subGroups: SubGroup[] = [];
 
   cartItems: WritableSignal<CartItem[]> = signal([]);
   groupItems: Signal<Record<string, CartItem[]>> = computed(() => this.cartItems().groupBy(v => v.title));
@@ -28,36 +41,40 @@ export class CartListComponent implements OnInit, OnChanges {
   isSearch: boolean = false;
   #initValue: Group[] = [];
 
-  ngOnInit(): void {
-    this.#initValue = structuredClone(this.value);
-    this.currentGroup = this.value[0] || {};
-  }
-
-  ngOnChanges({value}: SimpleChanges): void {
-    if(value) this.value = structuredClone(value.currentValue);
-  }
 
   /**
    * 取得使用者當前點選到的group
    * @param group 點選到的group
    */
   onGroupClick(group: Group) {
-    this.subGroups = [];
-    this.value = structuredClone(this.#initValue);
-    this.currentGroup = group;
+    if (this.currentGroup !== group) {
+      this.menuItems = [];
+      if (this.currentGroup.subGroups) this.currentGroup.subGroups.map((s) => s.isChecked = false);
+      if (!group.subGroups) this.#pullItem(group);
+      this.currentGroup = group;
+    }
+  }
+
+  #pullItem(group: Group, subGroup?: SubGroup) {
+    const key = `${group.info.code}${subGroup ? subGroup.info.code : ''}`;
+    if (!this.pool.has(key)) {
+      this.pullItem.emit(subGroup ? { groupCode: group.info.code, subGroupCode: subGroup.info.code } : { groupCode: group.info.code });
+    } else {
+      this.menuItems.push(this.pool.get(key)!);
+    }
   }
 
   /**
    * 取得有被勾選到的subGroup，並顯示底下的item
    * @param subGroup 點選到的subGroup checkbox
    */
-  onSubGroupClick(subGroup: SubGroup) {
+  onSubGroupClick(group: Group, subGroup: SubGroup ) {
     if (subGroup.isChecked) {
-      this.subGroups.push(subGroup);
+      this.#pullItem(group, subGroup);
     } else {
-      const index = this.subGroups.indexOf(subGroup);
+      const index = this.menuItems.indexOf(this.pool.get(`${group.info.code}${subGroup.info.code}`)!);
       if (index !== -1) {
-        this.subGroups.splice(index, 1);
+        this.menuItems.splice(index, 1);
       }
     }
   }
@@ -71,6 +88,7 @@ export class CartListComponent implements OnInit, OnChanges {
   addCartClick(coding: Coding, group: Group, subGroup?: SubGroup) {
     this.#addItem(coding, group, subGroup);
   }
+
 
   /**
    * 將購物車中的 item，拿掉
@@ -114,11 +132,14 @@ export class CartListComponent implements OnInit, OnChanges {
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
   #addItem(coding: Coding, group: Group, subGroup?: SubGroup): void {
-    const itemTilte = group.groupName.concat(subGroup ? `>${subGroup.subGroupName}` : "");
-    this.cartItems.mutate(a => a.push({
-      title: itemTilte,
-      item: coding
-    }));
-    this.cartItems.update(a => a.distinct((v) => v.item.code))
+    console.log('addItem');
+
+    // const itemTilte = group.groupName.concat(subGroup ? `>${subGroup.subGroupName}` : "");
+    // this.cartItems.mutate(a => a.push({
+    //   title: itemTilte,
+    //   item: coding
+    // }));
+    // this.cartItems.update(a => a.distinct((v) => v.item.code))
   }
+
 }
