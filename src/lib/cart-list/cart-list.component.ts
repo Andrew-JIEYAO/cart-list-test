@@ -83,7 +83,7 @@ export class CartListComponent implements OnInit {
    * @param group 該 item 的 group
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
-  addCartClick(item: Coding, group: Coding, subGroup?: Coding) {
+  onAddCart(item: Coding, group: Coding, subGroup?: Coding) {
     this.#addCartItem(item, group.display.concat(subGroup ? `>${subGroup.display}` : ""));
   }
 
@@ -91,7 +91,7 @@ export class CartListComponent implements OnInit {
    * 將購物車中的 item，拿掉
    * @param cartItem 點選到購物車中的 item
    */
-  removeCartClick(cartItem: CartItem) {
+  onRemoveCart(cartItem: CartItem) {
     const index = this.cartItems().indexOf(cartItem);
     if (index !== -1) this.cartItems.mutate(a => a.splice(index, 1));
   }
@@ -126,7 +126,7 @@ export class CartListComponent implements OnInit {
    * @param menuKey
    * @returns
    */
-  getItem(itemKey: ItemKey): Coding[] {
+  getItemFromPool(itemKey: ItemKey): Coding[] {
     const key = this.parseKey(itemKey);
     return this.itemPool.get(key)?.infos || [];
   }
