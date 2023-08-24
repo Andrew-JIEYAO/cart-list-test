@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, effect, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Signal, SimpleChanges, WritableSignal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartItem, Coding, Group, MenuItem, ItemKey, SubGroup } from './cart-list.interface';
+import { CartItem, Coding, Group, MenuItem, SubGroup, MenuKey } from './cart-list.interface';
 import { FormsModule } from '@angular/forms';
 import "@his-base/array-extension";
 
@@ -15,9 +15,9 @@ export class CartListComponent implements OnInit {
 
   @Output() addCart = new EventEmitter<Coding[]>();
   @Output() search = new EventEmitter<string>;
-  @Output() getMenuItem = new EventEmitter<ItemKey>;
+  @Output() getMenuItem = new EventEmitter<MenuKey>;
   @Input() groupValue: Group[] = [];
-  @Input() searchValue: MenuItem[] = []
+  @Input() searchValue: MenuItem[] = [];
 
   #itemValue: MenuItem = {} as MenuItem;
   @Input()
@@ -32,7 +32,7 @@ export class CartListComponent implements OnInit {
   }
 
   itemPool: Map<string, MenuItem> = new Map();
-  menuItems: MenuItem[] = [];
+  menuKeys: MenuKey[] = [];
   currentGroup: Group = {} as Group;
 
   cartItems: WritableSignal<CartItem[]> = signal([]);
@@ -47,30 +47,33 @@ export class CartListComponent implements OnInit {
   }
 
   /**
-   * 取得使用者當前點選到的group
+   * 點選到group觸發的事件
    * @param group 點選到的group
    */
   onGroupClick(group: Group) {
     if (this.currentGroup !== group) {
-      this.menuItems = [];
-      if (this.currentGroup.subGroups) this.currentGroup.subGroups.map((s) => s.isChecked = false);
-      if (!group.subGroups) this.#getManuItem(group);
+      this.menuKeys = [];
+      if (this.currentGroup.subGroups) this.currentGroup.subGroups.map((s) => s.isChecked = false); //清空前一個group底下的subGroup的check
+      if (!group.subGroups) {
+        if (!this.itemPool.has(group.info.code)) this.getMenuItem.emit({group: group.info}); //處理大池子itemPool
+        this.menuKeys.push({ group: group.info }); //處理決定顯不顯示的陣列menuKeys
+      }
       this.currentGroup = group;
     }
   }
 
   /**
-   * 取得有被勾選到的subGroup，並顯示底下的item
+   * 點選到subGroup觸發的事件
    * @param subGroup 點選到的subGroup checkbox
    */
-  onSubGroupClick(group: Group, subGroup: SubGroup) {
-    if (subGroup.isChecked) {
-      this.#getManuItem(group, subGroup);
+  onSubGroupClick(group: Coding, subGroup: Coding) {
+    const index = this.menuKeys.findIndex((i) => i.group === group && i.subGroup === subGroup);
+    if (index !== -1) {
+      this.menuKeys.splice(index, 1);//處理決定顯不顯示的陣列menuKeys
     } else {
-      const index = this.menuItems.indexOf(this.itemPool.get(`${group.info.code}${subGroup.info.code}`)!);
-      if (index !== -1) {
-        this.menuItems.splice(index, 1);
-      }
+      const key = group.code.concat(subGroup.code);
+      if(!this.itemPool.has(key)) this.getMenuItem.emit({group: group, subGroup:subGroup});//處理大池子itemPool
+      this.menuKeys.push({ group: group, subGroup: subGroup });//處理決定顯不顯示的陣列menuKeys
     }
   }
 
@@ -119,43 +122,33 @@ export class CartListComponent implements OnInit {
   }
 
   /**
+   * 從畫面上的group與subGroup去拿取相對應的item
+   * @param menuKey
+   * @returns
+   */
+  getItem(menuKey: MenuKey): Coding[] {
+    const key = menuKey.group.code.concat(menuKey.subGroup ? menuKey.subGroup.code : '');
+    return this.itemPool.get(key)?.infos || [];
+  }
+
+  /**
    * 將點選到的 item 加到購物車中的私有方法
    * @param coding 點選到的item
    * @param group 該 item 的 group
    * @param subGroup 該 item 的 subGroup 有可能不存在
    */
   #addCartItem(item: Coding, title: string): void {
-    this.cartItems.mutate(a => a.push({
-      title: title,
-      item: item
-    }));
+    this.cartItems.mutate(a => a.push({ title,item }));
     this.cartItems.update(a => a.distinct((v) => v.item.code))
   }
 
   /**
-   *
-   * @param group
-   * @param subGroup
-   */
-  #getManuItem(group: Group, subGroup?: SubGroup) {
-    const key = `${group.info.code}${subGroup ? subGroup.info.code : ''}`;
-    if (!this.itemPool.has(key)) {
-      this.getMenuItem.emit(subGroup
-        ? { groupCode: group.info.code, subGroupCode: subGroup.info.code }
-        : { groupCode: group.info.code });
-    } else {
-      this.menuItems.push(this.itemPool.get(key)!);
-    }
-  }
-
-  /**
-   *
+   * 將外面撈取回來的item放進池子中
    * @param menuItem
    */
   #setItemPool(menuItem: MenuItem) {
     const group = menuItem.group;
     const subGroup = menuItem.subGroup;
     this.itemPool.set(group.code.concat(subGroup ? subGroup.code : ''), menuItem)
-    this.menuItems.push(menuItem);
   }
 }

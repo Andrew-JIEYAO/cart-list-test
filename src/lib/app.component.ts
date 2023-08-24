@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartListComponent } from "./cart-list/cart-list.component";
-import { Coding, Group, MenuItem, ItemKey } from './cart-list/cart-list.interface';
+import { Coding, Group, MenuItem, MenuKey } from './cart-list/cart-list.interface';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
@@ -262,7 +262,7 @@ export class AppComponent {
     }
   }
 
-  onGetMenuItem(key: ItemKey) {
+  onGetMenuItem(key: MenuKey) {
     // setTimeout(() => {
     //   this.itemValue = this.#getMenuItem(key)!;
     // }, 1000);
@@ -335,9 +335,9 @@ export class AppComponent {
     ];
   }
 
-  #getMenuItem(key: ItemKey): MenuItem | undefined {
+  #getMenuItem(key: MenuKey): MenuItem | undefined {
     return this.itemValues.find((item) => {
-      if(item.group.code === key.groupCode && (!key.subGroupCode || item.subGroup?.code === key.subGroupCode)) {
+      if(item.group.code === key.group.code && (!key.subGroup?.code || item.subGroup?.code === key.subGroup.code)) {
         return true;
       }
       return false;

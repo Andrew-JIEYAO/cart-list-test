@@ -8,7 +8,7 @@
               <i class="pi pi-search"></i>
               <input type="text" class="search-input" placeholder="請輸入醫令或關鍵字" [(ngModel)]="keyword"
                 (keyup.enter)="onSearch()" />
-              <i *ngIf="isSearch" class="pi pi-times" (click)="onSearchCancel()"></i>
+              <i *ngIf="keyword !== ''" class="pi pi-times" (click)="onSearchCancel()"></i>
             </div>
             <button class="search-button" (click)="onSearch()">查詢</button>
           </div>
@@ -24,12 +24,11 @@
                 </li>
               </div>
             </div>
-            <ng-container *ngIf="menuItems">
-              <ng-container *ngTemplateOutlet="
+
+            <ng-container *ngTemplateOutlet="
               currentGroup.subGroups ? subGroup : item
               context: { $implicit: currentGroup }
               ">
-              </ng-container>
             </ng-container>
 
           </div>
@@ -43,7 +42,8 @@
                 <div>
                   <div class="item-title">{{menuItem.group.display}}>{{menuItem.subGroup.display}}</div>
                   <div class="query-grid">
-                    <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group, menuItem.subGroup)">
+                    <button *ngFor="let info of menuItem.infos"
+                      (click)="addCartClick(info, menuItem.group, menuItem.subGroup)">
                       <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                         background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                       {{ info.display }}
@@ -84,16 +84,18 @@
         <div class="subGroup">
           <div class="subGroup-list">
             <div *ngFor="let subGroup of group.subGroups">
-              <input type="checkbox" [(ngModel)]="subGroup.isChecked" (change)="onSubGroupClick(group, subGroup)" />
+              <input type="checkbox" [(ngModel)]="subGroup.isChecked"
+                (change)="onSubGroupClick(group.info, subGroup.info)" />
               {{ subGroup.info.display }}
             </div>
           </div>
         </div>
         <div class="item">
-          <div *ngFor="let menuItem of menuItems" class="item-list">
-            <div class="item-title">{{ menuItem.group.display }} > {{ menuItem.subGroup?.display || '' }}</div>
+          <div *ngFor="let menuKey of menuKeys" class="item-list">
+            <div class="item-title">{{ menuKey.group.display }} > {{ menuKey.subGroup?.display || '' }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group, menuItem.subGroup)">
+              <button *ngFor="let info of getItem(menuKey)"
+                (click)="addCartClick(info, menuKey.group, menuKey.subGroup)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
@@ -105,10 +107,10 @@
       <!-- 沒subGroup -->
       <ng-template #item let-group>
         <div class="item">
-          <ng-container *ngFor="let menuItem of menuItems">
-            <div class="item-title">{{ menuItem.group.display }}</div>
+          <ng-container *ngFor="let menuKey of menuKeys">
+            <div class="item-title">{{ menuKey.group.display }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of menuItem.infos" (click)="addCartClick(info, menuItem.group)">
+              <button *ngFor="let info of getItem(menuKey)" (click)="addCartClick(info, menuKey.group)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
