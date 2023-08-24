@@ -22,8 +22,10 @@ export class CartListComponent implements OnInit {
   #itemValue: MenuItem = {} as MenuItem;
   @Input()
   set itemValue(value: MenuItem) {
-    this.#setItemPool(value);
-    this.#itemValue = value;
+    if (value.group) {
+      this.#setItemPool(value);
+      this.#itemValue = value;
+    }
   }
   get itemValue(): MenuItem {
     return this.#itemValue;
