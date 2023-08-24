@@ -27,7 +27,7 @@ export interface CartItem {
   item: Coding;
 }
 
-export interface MenuKey {
+export interface ItemKey {
   group: Coding,
   subGroup?: Coding
 }

@@ -91,11 +91,11 @@
           </div>
         </div>
         <div class="item">
-          <div *ngFor="let menuKey of menuKeys" class="item-list">
-            <div class="item-title">{{ menuKey.group.display }} > {{ menuKey.subGroup?.display || '' }}</div>
+          <div *ngFor="let itemKey of itemKeys" class="item-list">
+            <div class="item-title">{{ itemKey.group.display }} > {{ itemKey.subGroup?.display || '' }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of getItem(menuKey)"
-                (click)="addCartClick(info, menuKey.group, menuKey.subGroup)">
+              <button *ngFor="let info of getItem(itemKey)"
+                (click)="addCartClick(info, itemKey.group, itemKey.subGroup)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
@@ -107,10 +107,10 @@
       <!-- 沒subGroup -->
       <ng-template #item let-group>
         <div class="item">
-          <ng-container *ngFor="let menuKey of menuKeys">
-            <div class="item-title">{{ menuKey.group.display }}</div>
+          <ng-container *ngFor="let itemKey of itemKeys">
+            <div class="item-title">{{ itemKey.group.display }}</div>
             <div class="item-grid">
-              <button *ngFor="let info of getItem(menuKey)" (click)="addCartClick(info, menuKey.group)">
+              <button *ngFor="let info of getItem(itemKey)" (click)="addCartClick(info, itemKey.group)">
                 <i class="pi pi-plus" style="color: #1C1D1C;border-radius: var(--border-radius-rounded, 20px);
                   background: var(--primary-container, #CCE7E0);font-size: 0.5rem;padding: 5px;"></i>
                 {{ info.display }}
