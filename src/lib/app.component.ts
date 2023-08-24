@@ -253,9 +253,9 @@ export class AppComponent {
     this.visible = true;
   }
 
-  async onSearch(keyword: string) {
+  onSearch(keyword: string) {
     try {
-      await this.#searchData(keyword);
+      this.searchValue = this.#searchData(keyword);
     }
     catch (error) {
       console.log(error);
@@ -274,65 +274,15 @@ export class AppComponent {
     this.visible = false;
   }
 
-  #searchData(query: string) {
-    this.searchValue = [
-      {
-        "group": {
-          "code": "020",
-          "display": "漢堡"
-        },
-        "subGroup": {
-          "code": "021",
-          "display": "米漢堡"
-        },
-        "infos": [
-          {
-            "code": "123",
-            "display": "和風板烤雞腿米漢堡"
-          },
-          {
-            "code": "124",
-            "display": "義式雞腿米漢堡"
-          },
-          {
-            "code": "125",
-            "display": "美式厚牛米漢堡"
-          }
-        ]
-      },
-      {
-        "group": {
-          "code": "030",
-          "display": "其他點心"
-        },
-        "infos": [
-          {
-            "code": "101",
-            "display": "烤雞拼盤"
-          },
-          {
-            "code": "102",
-            "display": "海陸大拼盤"
-          },
-          {
-            "code": "103",
-            "display": "黃金雞柳條"
-          },
-          {
-            "code": "104",
-            "display": "黃金波浪地瓜條"
-          },
-          {
-            "code": "105",
-            "display": "麻糬QQ球"
-          },
-          {
-            "code": "106",
-            "display": "薯金幣"
-          }
-        ]
+  #searchData(query: string):MenuItem[]  {
+    return this.itemValues.filter((item) => {
+      if(item.group.display.includes(query) ||
+      (item.subGroup && item.subGroup.display.includes(query)) ||
+      (item.infos && item.infos.some(info => info.display.includes(query)))) {
+        return true;
       }
-    ];
+      return false;
+    })
   }
 
   #getMenuItem(key: ItemKey): MenuItem | undefined {
